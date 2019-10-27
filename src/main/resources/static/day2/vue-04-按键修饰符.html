@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>vuen内部的按键修饰符 和 自定义的按键修饰符</title>
+    <script src="../lib/vue.js"></script>
+    <link rel="stylesheet" href="../lib/bootstrap.css">
+</head>
+<body>
+<div id="app">
+    <!--  -->
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title">添加品牌</h3>
+        </div>
+        <!-- form-inline   :在外面的div加上,里面的div就都在一行的 -->
+        <div class="panel-body form-inline">
+            <label>
+                Id:
+                <input type="text" class="form-control" v-model="id">
+            </label>
+            <!-- 键盘修饰符
+                    @keyup  键盘抬起时
+                    .enter  指定为enter回车按键
+                    除了vue内部自定义的键盘码,还可以用js的键盘码值,如想要f2 => @keyup.113  ,f1  => @keyup.112
+            -->
+            <label>
+                Name:
+                <input type="text" class="form-control" v-model="name" @keyup.enter="addByKeyUp">
+            </label>
+            <!-- 事件绑定  时,可以加()   ,即可以传参 -->
+            <input type="button" value="添加" class="btn btn-primary" @click="add()">
+            <!--  -->
+            <label>
+                搜索名字关键字:
+                <input type="text" class="form-control" v-model="keywords">
+            </label>
+        </div>
+    </div>
+
+
+    <table class="table table-bordered table-hover table-striped">
+        <thead>
+        <tr>
+            <th>编号</th>
+            <th>名字</th>
+            <th>创建时间</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- 注意 key 属性有 :绑定属性 -->
+        <!--<tr v-for="item in list" v-bind:key="item.id">-->
+        <!-- 不能直接写死list,因为list为 data中的数据 -->
+        <!--<tr v-for="item in list" :key="item.id">-->
+        <tr v-for="item in search(keywords)" :key="item.id">
+            <td>{{ item.id }}</td>
+            <td>{{ item.name }}</td>
+            <!-- 传yyyy-mm-dd 就是年月日 传'' 就是有时分秒 -->
+            <td>{{ item.ctime | dateFormatFilter('yyyy-MM-dd') }}</td>
+            <td>
+                <!-- 阻止默认行为 :会刷新页面 : .prevent -->
+                <a href="" @click.prevent="del(item.id)">删除</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+<script>
+    /**
+     * 自定义按键修饰符:
+     *  此时就可以直接使用 f1 ,f2
+     *
+     *      @keyup.f1
+     *      @keyup.f2
+     *
+     * */
+    Vue.config.keyCodes.f2 = 113;
+    Vue.config.keyCodes.f1 = 112;
+
+    /**
+     * 全局过滤器
+     * */
+    //只能用在 {{}} 和v-bind  两个中
+    //{{ name | 过滤器名字 }}   : |为管道符
+    //参数:过滤器名字,function(管道符前面的变量,.....)
+    Vue.filter('过滤器名字', function (data) {
+        return data + 123;
+    });
+    /**
+     * 注意过滤器 放在上面,否则:[Vue warn]: Failed to resolve filter: dateFormatFilter
+     * */
+    //时间格式转化filter
+    Vue.filter('dateFormatFilter', function (dateStr, pattern) {
+//    Vue.filter('dateFormatFilter', function (dateStr, pattern="") {  //es6特性
+        var dt = new Date(dateStr);
+        var year = dt.getFullYear();
+        var month = dt.getMonth() + 1;//从0开始
+        var day = dt.getDate();
+
+        if (pattern && pattern.toLowerCase() == 'yyyy-MM-dd hh:mm-dd') {
+            //yyyy-mm-dd
+//        return year + '-' + month + '-' + day;
+            return `${year}-${month}-${day}`
+        } else {
+            var hours = dt.getHours();
+            var minutes = dt.getMinutes();
+            let seconds = dt.getSeconds();
+            return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+        }
+
+
+    });
+
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            list: [
+                {id: 1, name: 'benz', ctime: new Date()},
+                {id: 2, name: 'bmw', ctime: new Date()},
+                {id: 3, name: 'aodi', ctime: new Date()},
+            ],
+            id: '',
+            name: '',
+            keywords: '',//搜索关键字
+        },
+        //数组新方法: forEach遍历 , splice删除 ,some遍历 , findIndex查找下标 ,filter过滤 , push插入
+        //字符串方法: indexOf不包含返回-1 , includes包含
+        methods: {
+            addByKeyUp(){
+                var car = {id: this.id, name: this.name, ctime: new Date()};
+                this.list.push(car);
+                this.id = this.name = '';
+            },
+            //模糊搜索
+            search(keywords){
+                //方法(1)
+//                var newList = [];
+//                this.list.forEach(item => {
+//                    if (item.name.indexOf(keywords) != -1) {
+//                        newList.push(item);
+//                    }
+//                });
+//                return newList;
+
+                //方法(2)
+                return newList = this.list.filter(item => {
+                    if (item.name.includes(keywords)) {
+                        return item;
+                    }
+                });
+            },
+            //添加
+            add(){
+                var car = {id: this.id, name: this.name, ctime: new Date()};
+                this.list.push(car);
+                this.id = this.name = '';
+            },
+            //删除
+            del(id){
+                //方法(1)
+                //数组 splice方法
+                //some() 方法,根据指定的条件 查找,找到就终止循环,
+                this.list.some((item, i) => {
+                        if (item.id == id) {
+                            this.list.splice(i, 1);
+                            return true;//终止循环
+                        }
+                    }
+                )
+
+                //方法(2)
+                //查找索引,直接返回 索引值
+//                var index = this.list.findIndex(item => {
+//                    if (item.id == id) {
+//                        return true;
+//                    }
+//                });
+//                console.log(index);
+//                this.list.splice(index, 1);
+            },
+            /**
+             * 定义私有过滤器, 有两个条件, [过滤器name,过滤器条件]
+             *
+             * 过滤器调用,采用的事就近原则, 私有和全局的name重复,先调用私有的
+             * */
+            filters: {
+                dateFormatFilter: function (dateStr, pattern = '') {
+                    var dt = new Date(dateStr);
+                    var year = dt.getFullYear();
+                    /**
+                     * 时间:  es6  :   string.padStart()  格式补充问题,为什么无法调用
+                     * 14:8:2 把时间转化为 14:08:21  不够两位转为两位
+                     * */
+                    var month = dt.getMonth() + 1;//dt.getMonth()从0开始
+                    var month = (dt.getMonth() + 1).toString().padStart(2, 0);
+                    var day = dt.getDate().toString().padStart(2, 0);
+
+                    if (pattern && pattern.toLowerCase() == 'yyyy-mm-dd') {
+                        return `${year}-${month}-${day}`
+                    } else {
+                        var hours = dt.getHours().toString().padStart(2, 0);
+                        var minutes = dt.getMinutes().toString().padStart(2, 0);
+                        let seconds = dt.getSeconds().toString().padStart(2, 0);
+                        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+                    }
+                }
+            }
+        }
+    });
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>路由的基本使用</title>
+    <script src="../lib/vue.js"></script>
+    <!--<script src="../lib/vue-resource.js"></script>-->
+    <!-- 导入该包,自动就有 hash路由(#号) -->
+    <script src="../lib/vue-router.js"></script>
+    <link rel="stylesheet" href="../lib/bootstrap.css">
+</head>
+<body>
+<div id="app">
+    <a href="#/login">登录</a>
+    <a href="#/register">注册</a>
+
+    <!-- 这就是一个占位符:用来展示路由的内容 -->
+    <router-view></router-view>
+</div>
+<script>
+
+    //创建组件模板对象
+    var login = {
+        template: '<h1>登录组件</h1>'
+    }
+    var register = {
+        template: '<h1>注册组件</h1>'
+    }
+    //当导入 vue-router 包 ,window就会有一个构造函数VueRouter
+    var routerObj = new VueRouter({
+//        route //路由匹配规则
+        routers: [
+            //每个路由规则,都是一个对象,对象必须有两个属性
+            //第1个属性:path ,表示监听哪个路由链接地址
+            //第2个属性:component ,表示如果路由是前面匹配到的path,则展示匹配的哪个组件
+            //component的属性值 必须是组件对象,不可以是名称
+            {path: '/login', component: login},
+            {path: '/register', component: register}
+        ],
+    });
+
+
+    var vm = new Vue({
+        el: '#app',
+        data: {},
+        methods: {},
+        //将路由规则对象,注册到vm实例上,用来监听url的变化,来控制展示对应的组件
+        router: routerObj,
+    })
+</script>
+
+</body>
+</html>

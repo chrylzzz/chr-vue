@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chryl.mapper.UserMapper">
+    <resultMap id="BaseResultMap" type="com.chryl.po.User">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="user_password" jdbcType="VARCHAR" property="userPassword"/>
+        <result column="user_name" jdbcType="VARCHAR" property="userName"/>
+        <result column="user_date" jdbcType="DATE" property="userDate"/>
+    </resultMap>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="string">
+        SELECT * FROM USER WHERE id = #{id}
+    </select>
+
+    <!--  -->
+    <insert id="insertUser" parameterType="com.chryl.po.User">
+        INSERT INTO USER (id,user_name,user_password,user_date)
+        VALUES (#{user.id},#{user.userName},#{user.userPassword},#{user.userDate})
+    </insert>
+
+    <!--  -->
+    <delete id="deleteByPrimaryKey" parameterType="string">
+        DELETE FROM USER WHERE id = #{id}
+    </delete>
+    <!--  -->
+
+    <update id="updateUser" parameterType="com.chryl.po.User">
+        UPDATE USER SET id = #{user.id},
+        user_name = #{user.userName},
+        user_password = #{user.userPassword}
+        user_date = #{user.userDate}
+    </update>
+    <!--  -->
+    <select id="queryUsers" resultMap="BaseResultMap">
+        SELECT * FROM USER
+    </select>
+</mapper>

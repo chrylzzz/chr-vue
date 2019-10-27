@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>跑马灯</title>
+    <script src="./lib/vue.js"></script>
+</head>
+<body>
+
+<div id="app">
+    <input type="button" value="浪起来" @click="lang">
+    <input type="button" value="低调" @click="stop">
+    <h4>{{ msg }}</h4>
+</div>
+<script>
+    //在vue实例中,如果想要获取 data 中的数据,或者想要调用methods 中的方法,
+    //必须通过 this.属性名  或者 this.方法名    来进行访问,这里的this  就代表 new出来的 vm实例对象
+    //注意 不需要 this.data.msg
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            msg: '猥琐~,别浪~',
+            intervalId:null  //定义定时器id
+        },
+        methods: {
+            lang(){  //等价于  lang:function () {}
+                console.log(vm.msg);
+                console.log(this.msg);
+
+
+                //防止 多次启动定时器
+                if(this.intervalId!=null)return;
+/*
+                var _this = this;  // this 指向问题
+                setInterval(function () {
+                    //获取第一个头字符
+                    var start = _this.msg.substring(0, 1)
+                    //获取后面的
+                    var end = _this.msg.substring(1)
+                    //重新赋值
+                    _this.msg = end + start
+                }, 400)
+                //会自动监听 data属性中的数据的变化,如果发生改变,会自动同步到页面,只需要关心操作数据,不需要操作页面dom的渲染
+*/
+
+                //ES6  箭头函数特性 内部和外部
+                // 这时候 function的this 就不存在 this 指向的问题
+                this.intervalId = setInterval( () => {
+                    //获取第一个头字符
+                    var start = this.msg.substring(0, 1);
+                    //获取后面的
+                    var end = this.msg.substring(1);
+                    //重新赋值
+                    this.msg = end + start
+                }, 400)
+            },
+
+
+            //停止
+            stop(){
+                //清除定时器 id
+                clearInterval(this.intervalId);
+                //清除定时器的id之后  id也不为null,需要手动设置为null才能多次开启关闭
+                this.intervalId=null;
+            }
+        }
+    });
+    //1.点击事件
+
+    //2.拿到msg信息, substring 截取第一个字符,放到最后,并且一直截取,一直放到最后
+
+    //3.需要定时器 自动截取 ,   2.的代码放到定时器
+</script>
+</body>
+</html>

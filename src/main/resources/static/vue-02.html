@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>v-cloak</title>
+    <script src="./lib/vue.js"></script>
+
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <!-- v-cloak 解决插入值使得闪烁问题 -->
+    <p v-cloak>{{msg}}</p>
+    <!-- v-text和插入值表达式{{}} 的区别
+    1,v-text默认没有差值闪烁问题,{{}}有
+    2,插值表达式前后可以放任何内容,v-text会把嵌套的元素内容清空
+     -->
+    <h4 v-text="msg"></h4>
+    <p v-cloak>+++ {{msg}} ---</p>
+    <!-- v-text和{{}} 都不能渲染data中的html -->
+    <p v-cloak>+++ {{msg2}} ---</p>
+    <h4 v-text="msg2"></h4>
+    <!-- v-html : 能够渲染data中的html-->
+    <div v-html="msg2"></div>
+
+
+    <!-- title : 鼠标放到button显示的内容 -->
+    <input type="button" value="按钮1" title="12345">
+    <!-- v-bind : vue提供的绑定的属性的指令 -->
+    <input type="button" value="按钮2" v-bind:title="mytitle">
+    <!-- v-bind : 绑定属性,把值 赋值  到 想要指定的地方
+            v-bind  会把 "xx"  引号里的xx当做js声明的变量(表达式) 去执行
+    -->
+    <input type="text" v-bind:value="inpval">
+    <input type="text" v-bind:value="inpval+'-007'">
+
+    <!-- v-bind 的简写   直接为 :-->
+    <input type="text" :value="inpval+'-009'">
+    <br>
+    <!-- v-on :绑定事件  ,简写 为  @
+        :click  点击事件
+     -->
+    <input type="button" value="js按钮" id="btn-js">
+    <input type="button" value="vue按钮1" v-on:click="show">
+    <input type="button" value="vue按钮2" v-on:click="show2">
+    <input type="button" value="vue按钮3" @click="show2">
+    <!-- 鼠标覆盖事件 :mouseover
+            浏览器端常用的都可以设置
+     -->
+    <input type="button" value="vue按钮4" v-on:mouseover="show2">
+</div>
+
+
+<script>
+    var nv = new Vue({
+        el: '#app',  //定义控制的区域
+        data: {
+            msg: '123',
+            msg2: '<h1>哈哈</h1>',
+            inpval: 'chryl',
+            mytitle: '自己定义的v-bind',
+
+
+        },
+        methods: {  //methods这是对象,用来定义vue所有的的可用方法
+            show: function () {
+                alert('cmcc')
+            },
+            show2: function () {
+                alert('show2~~~~')
+            },
+
+
+        }
+    })
+
+
+    document.getElementById('btn-js').onclick = function () {
+        alert('Hello');
+    }
+</script>
+</body>
+</html>

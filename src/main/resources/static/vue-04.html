@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>时间修饰符</title>
+    <script src="./lib/vue.js"></script>
+    <style>
+        .inner {
+            height: 150px;
+            background-color: cadetblue;
+        }
+
+        .inner2 {
+            height: 150px;
+            background-color: chocolate;
+        }
+
+        .inner3 {
+            height: 150px;
+            background-color: cornsilk;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <!-- 冒泡机制:  在里层 的先出来  ,从里往外触发事件
+
+        .stop   在事件 函数 后使用, 阻止冒泡
+     -->
+    <div class="inner" @click="divClick">
+        <input type="button" value="点击-冒泡机制" @click="btnClick">
+        <br>
+        <input type="button" value="点击-no冒泡机制" @click.stop="btnClick">
+    </div>
+    <br>
+    <!-- 捕获模式: 与冒泡机制相反,  从外往里执行事件
+            .capture  捕获模式
+     -->
+    <div class="inner2" @click.capture="divClick">
+        <input type="button" value="点击-捕获机制" @click="btnClick">
+
+    </div>
+    <br>
+    <!--
+        只有点击自身才会触发, 不会因为 冒泡和捕获而触发
+            .self
+     -->
+    <div class="inner3" @click.self="divClick">
+        <input type="button" value="点击-捕获机制" @click="btnClick">
+        <br>
+        <input type="button" value="点击-no冒泡机制" @click.stop="btnClick">
+    </div>
+    <br>
+    <br>
+    <!--  阻止默认行为:例如 ,点击链接直接跳转 console 上的信息被百度 覆盖
+
+            .prevent  在事件后直接使用, 祖师默认行为,
+    -->
+    <a href="http://www.baidu.com" @click="linkClick">百度一下~不阻止</a>
+    <br>
+    <a href="http://www.baidu.com" @click.prevent="linkClick">百度一下~阻止默认兴文</a>
+
+
+    <br>
+    <!-- 只触发一次
+            .once  :只触发一次
+
+                这里指 默认行为 只触发一次
+    -->
+    <a href="http://www.baidu.com" @click.prevent.once="linkClick">百度一下~阻止一次默认行为</a>
+</div>
+<script>
+    var vm = new Vue({
+        el: '#app',
+        data: {},
+        methods: {
+            divClick(){
+                console.log('inner')
+            },
+            btnClick(){
+                console.log('btn')
+            },
+            linkClick(){
+                console.log('链接的点击事件')
+            }
+        }
+    })
+</script>
+
+</body>
+</html>

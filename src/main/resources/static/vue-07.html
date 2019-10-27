@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>vue中的样式: 1 ,2 </title>
+    <script src="./lib/vue.js"></script>
+    <style>
+        .red {
+            color: red;
+        }
+
+        .thin {
+            font-weight: 200;
+        }
+
+        .italic {
+            font-style: italic;
+        }
+
+        .active {
+            letter-spacing: 0.5em;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <!-- 平时 -->
+    <h1 class="red">Hello World</h1>
+    <h1 class="red thin">Hello World</h1>
+
+
+    <!-- 注意使用v-bind 绑定属性 -->
+
+    <!-- vue : 里面必须要有单引号  [ '' ,'' '' '' ]   -->
+    <h1 :class="['thin','italic']">Hello World</h1>
+    <!-- 三元表达式 -->
+    <h1 :class="['thin','italic',flag?'active':'']">Hello World</h1>
+    <!-- 对象的方式,k:v的方式 -->
+    <h1 :class="['thin','italic',{'active':flag}]">Hello World</h1>
+    <!-- 对象方式 :  注意格式
+        { k:v , k:v }
+     -->
+    <h1 :class="{thin:true,italic:false,active:true ,red:true}">Hello World</h1>
+    <h1 :class="classObj">Hello World</h1>
+
+
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <!--
+        'font-weight'        key 中有 -  必须要有 ''
+
+    -->
+    <h1 :style="{color:'red' ,'font-weight':200}">CMCC</h1>
+
+    <h1 :style="styleObj">CMCC</h1>
+    <!-- 放入数组  [styleObj1,styleObj2,styleObj3...]  -->
+    <h1 :style="[styleObj1,styleObj2,styleObj3,styleObj4]">CMCC</h1>
+
+</div>
+<script>
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            flag: false,
+            classObj: {thin: true, italic: false, active: true, red: true},
+            styleObj: {color: 'red', 'font-weight': 200},
+            styleObj1: {color: 'blue'},
+            styleObj2: {'font-weight': 200},
+            styleObj3: {'font-style': 'italic'},
+            styleObj4: {'letter-spacing': '0.5em'},
+        },
+        methods: {}
+    })
+</script>
+
+</body>
+</html>
