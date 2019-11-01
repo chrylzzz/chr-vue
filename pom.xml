@@ -49,6 +49,13 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>8.0.16</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.alibaba/fastjson -->
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.2.60</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -56,6 +63,10 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<!--<configuration>-->
+					<!--<skipTests>true</skipTests>    &lt;!&ndash;默认关掉单元测试 &ndash;&gt;-->
+				<!--</configuration>-->
+
 			</plugin>
 		</plugins>
 	</build>
