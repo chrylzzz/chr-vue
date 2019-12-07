@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>jQuery-denmo</title>
+    <script src="../lib/jquery-1.7.2.js"></script>
+</head>
+<body>
+<div>
+    <input type="radio" id="radio_1" name="radio_1" checked="checked" value="house">
+    <label>房产</label>
+    <input type="radio" id="radio_2" name="radio_1" value="car">
+    <label>车产</label>
+    <input type="radio" id="radio_3" name="radio_1" value="other">
+    <label>其他</label>
+    <hr>
+
+    <!-- 房 -->
+    <form action="#" id="house_form">
+        <label id="label_1">坐落地址:
+            <input type="text" value="" id="input_1">
+        </label>
+        <br>
+        <label>购买时间:
+            <input type="text" value="" id="input_2">
+        </label>
+        <br>
+        <label>使用年限:
+            <input type="text" value="" id="house_use_year">
+        </label>
+        <br>
+        <label>房子面积:
+            <input type="text" value="" id="house_area"> m²
+        </label>
+        <br>
+        <label>平方单价:
+            <input type="text" value="" id="house_price">
+        </label>
+        <br>
+        <label>房子价格:
+            <input type="text" value="" id="house_total_price">
+        </label>
+        <br>
+        <label>估计价格:
+            <input type="text" value="" id="exp_price">
+            <span id="exp_price_span"></span>
+        </label>
+    </form>
+
+    <!-- 车 -->
+    <form action="#" id="car_form">
+        <label>汽车价格:
+            <input type="text" value="" id="car_price">
+        </label>
+        <br>
+        <label>购买时间:
+            <input type="text" value="" id="car_buy_time">
+        </label>
+        <br>
+        <label>使用年限:
+            <input type="text" value="" id="car_use_year">
+        </label>
+        <br>
+        <label>估计价格:
+            <input type="text" value="" id="car_exp_price">
+            <span id="car_exp_price_span"></span>
+        </label>
+    </form>
+    <hr>
+</div>
+
+<script>
+
+    $("input[name='radio_1']").on("click", function () {
+        var inputVal = this.value;
+        if (inputVal == "house") {//房产
+            $("#car_form").hide();
+            //显示house_form
+            $("#house_form").show();
+        } else if (inputVal == "car") {//车产
+            $("#house_form").hide();
+            $("#car_form").show();
+        }
+
+    });
+    //car价格计算
+    $("#car_use_year").on("blur", function () {
+        let car_price = $("#car_price").val();
+        let car_use_year = $("#car_use_year").val();
+        if (car_price == null || car_price == '') {
+//            alert("请输入汽车价格");
+        } else if (car_use_year == null || car_use_year == '') {
+//            alert("请输入汽车年限");
+        } else {
+            let carExpPrice = car_price;
+            if (car_use_year <= 3) {
+                carExpPrice = carExpPrice * 0.7;
+            } else if (car_use_year <= 7) {
+                carExpPrice = carExpPrice * 0.5;
+            } else {
+                carExpPrice = carExpPrice * 0.3;
+            }
+            $("#car_exp_price_span").html("预计折算价格:" + carExpPrice).css("color", "red");
+        }
+
+    });
+
+    //house价格计算:  blur离开焦点 ,focus获得焦点
+    $("#house_area,#house_price").on("blur", function () {
+        let area = $("#house_area").val();
+        let price = $("#house_price").val();
+        if ((area == null || area == '') && (price == null || price == '')) {
+//            alert("请输入房子面积和平方价格");
+        } else if (area == null || area == '') {
+//            alert("请输入房子面积");
+        } else if (price == null || price == '') {
+//            alert("请输入房子的平方价格");
+        } else {
+            //房子价格计算
+            let totalPrice = area * price;
+            $("#house_total_price").val(totalPrice);
+            $("#house_total_price").attr("disabled", "disabled");
+            //折算价格
+            let houseUseYear = $("#house_use_year").val();
+
+            let zs_price = totalPrice;
+            if (houseUseYear <= 10) {
+                zs_price = totalPrice * 0.8;
+            } else if (houseUseYear <= 30) {
+                zs_price = totalPrice * 0.7;
+            } else if (houseUseYear <= 50) {
+                zs_price = totalPrice * 0.6;
+            } else {
+                zs_price = totalPrice * 0.5;
+            }
+            $("#exp_price_span").html("预计折算价格:" + zs_price).css("color", "red");
+        }
+        return;
+    });
+
+    //    $("#house_total_price").on("focus", function () {
+    //
+    //    });
+
+    $(function () {
+        //默认选择房产
+        $("#car_form").hide();
+
+    });
+
+</script>
+</body>
+</html>
