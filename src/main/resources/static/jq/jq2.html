@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../lib/jquery-1.7.2.js"></script>
+
+</head>
+<body>
+<div>
+    <span>数据 :</span>
+    <input type="text" class="data_input" id="data_id" data-id="12">
+    <br>
+    <span>数据2 :</span>
+    <input type="text" class="data_input" id="data_id1" data-id="34">
+</div>
+<script>
+    $(".data_input").on("blur", function () {
+//    $("#data_id").on("blur", function () {
+        debugger
+        var id = $(this).data("id")
+        var val = $(this).val();
+        console.log(id + "===" + val)
+
+    });
+
+    //
+    $(function () {
+
+    })
+</script>
+
+</body>
+</html>

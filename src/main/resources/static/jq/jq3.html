@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<!--1、先制作表格用tr th和tr td
+    2、若要建立叠加的表格，必须建立一个盒子通过覆盖将表格分成两份
+    3、新见得盒子必须绝对定位于表格。
+    4、然后将盒子和表格覆盖。完成
+-->
+<head>
+    <meta charset="utf-8">
+    <title>复杂表格的学习</title>
+    <style>
+        body {
+            margin-top: 15px;
+            position: relative;
+        }
+
+        * {
+            padding: 0;
+            margin: 0 auto;
+        }
+
+        table {
+            width: 420px;
+            font-size: 14px;
+            border-collapse: collapse; /*将边框合并成单一的边框*/
+            border: 1px solid #c3c3c3;
+        }
+
+        table tr {
+            height: 40px;
+            border: 1px solid #c3c3c3;
+        }
+
+        table tr td {
+            text-align: center;
+            border: 1px solid #C3C3C3;
+        }
+
+        table tr th {
+            border: 1px solid #C3C3C3;
+            font-size: 14px;
+            font-weight: normal; /*不加粗*/
+        }
+
+        /*.pad{*/
+        /*padding-top: 20px;*/
+        /*}*/
+        .box { /*先制作一个盒子，然后搞一个边框能和上面的重叠，然后覆盖上去*/
+            width: 236px;
+            height: 20px;
+            background: #fff;
+            font-size: 14px; /*字体大小*/
+            text-align: center; /*水平居中*/
+            line-height: 18px; /*行高，上下居中*/
+            border: 1px solid #C3c3c3; /*给盒子边框加上与表格相同的实线*/
+            position: absolute; /*绝对定位于表格*/
+            left: 655px; /*覆盖边框*/
+        }
+    </style>
+</head>
+<body>
+<div class="box">
+    业绩
+</div>
+<table border="" cellspacing="" cellpadding="">
+    <tr>
+        <th>姓名</th><!--tr是一行，td是一列，th标题列-->
+        <th>工号</th>
+        <th class="pad" colspan="2">本月月绩</th>
+        <th class="pad" rowspan="2">上月月绩</th>
+    </tr>
+    <tr>
+        <td>Z</td>
+        <td>2014169</td>
+        <td>1000</td>
+        <td>896</td>
+    </tr>
+</table>
+<img src="http://localhost:80/images/5F44D9DA9194A7E8F2E88CA017AC9EE4.jpg" alt="" width="300px" height="300px">
+<img src="http://localhost/showimg?path=/Users/chryl/images/5F44D9DA9194A7E8F2E88CA017AC9EE4.jpg" alt="" width="300px" height="300px">
+<img src="http://localhost/showimg2?path=/Users/chryl/images/5F44D9DA9194A7E8F2E88CA017AC9EE4.jpg" alt="" width="300px" height="300px">
+<br>
+<img src="http://localhost/showimg3?path=/Users/chryl/images/5F44D9DA9194A7E8F2E88CA017AC9EE4.jpg" alt="" width="300px" height="300px">
+
+</body>
+</html>

@@ -1,14 +1,13 @@
 package com.chryl.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.chryl.mapper.UserMapper;
 import com.chryl.po.User;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 
 /**
  * Created by Chryl on 2019/10/26.
@@ -64,5 +63,100 @@ public class ChrylController {
         boolean contains2 = s.contains("");
         System.out.println(contains2);
 
+    }
+
+    @GetMapping("/showimg")
+    public void showimg(String path, HttpServletResponse response) {
+        //从本地读取文件并返回到网页中
+        FileInputStream in = null;
+        ServletOutputStream out = null;
+        try {
+            File file = new File(path);
+            in = new FileInputStream(file);
+            out = response.getOutputStream();
+            byte[] bytes = new byte[1024 * 10];
+            int len = 0;
+            while ((len = in.read(bytes)) != -1) {
+                out.write(bytes, 0, len);
+            }
+            out.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                in.close();
+                out.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    @GetMapping("showimg2")
+    public void show2(String path, HttpServletResponse response) {
+
+        File file = new File(path);
+        try (InputStream inputStream = new FileInputStream(file);
+             OutputStream outputStream = response.getOutputStream()
+        ) {
+            if (file.exists()) {
+
+                byte[] bytes = new byte[inputStream.available()];
+                int length = 0;
+                while ((length = inputStream.read(bytes)) != -1) {
+                    System.out.println("length in ::" + length);
+                    outputStream.write(bytes, 0, length);
+                }
+                System.out.println("length::" + length);
+                outputStream.flush();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @GetMapping("showimg3")
+    public void show4(String path, HttpServletResponse response) throws IOException {
+
+        InputStream inputStream = null;
+        try (
+                OutputStream outputStream = response.getOutputStream()
+        ) {
+            File file = new File(path);
+            inputStream = new FileInputStream(file);
+            byte[] bytes = new byte[inputStream.available()];
+            System.out.println("inputStream.available()::" + inputStream.available());
+            inputStream.read(bytes);
+            outputStream.write(bytes);
+            outputStream.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            inputStream.close();
+        }
+    }
+
+    @RequestMapping(value = "/showimg4", method = RequestMethod.GET)
+    public void showimg4(HttpServletResponse response, String path) throws Exception {
+        try {
+            String filePath = "根路径" + path;
+            File file = new File(filePath);
+            if (file.exists()) {
+                FileInputStream fis = new FileInputStream(file);
+                int i = fis.available(); // 得到文件大小   
+                byte data[] = new byte[i];
+                fis.read(data); // 读数据
+                response.setContentType("image/*"); // 设置返回的文件类型   
+                OutputStream toClient = response.getOutputStream();// 得到向客户端输出二进制数据的对象   
+                toClient.write(data);// 输出数据
+                toClient.flush();
+                toClient.close();
+                fis.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("图片不存在");
+        }
     }
 }
