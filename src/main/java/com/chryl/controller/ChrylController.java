@@ -36,6 +36,7 @@ public class ChrylController {
         return user;
     }
 
+    //vue 前端设置 json传值,使用 body ,但是上面没设置body也能接收到
     @PostMapping("/post2")
     public Object show3(@RequestBody User u) {
         User user = userMapper.selectByPrimaryKey(u.getId());
