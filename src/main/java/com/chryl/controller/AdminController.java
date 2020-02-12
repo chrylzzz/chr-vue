@@ -24,7 +24,6 @@ public class AdminController {
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String login(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 
-
         //模拟解密成功
         if (true) {
             String uname = CookieUtils.getCookieValue(request, "UNAME", "utf-8");
