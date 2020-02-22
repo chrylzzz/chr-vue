@@ -1,16 +1,18 @@
 package com.chryl.controller;
 
+
 import com.chryl.po.AuthUser;
 import com.chryl.util.AesCBC;
 import com.chryl.util.CookieUtils;
+import com.chryl.util.PasswordUtil;
 import com.chryl.util.ResponseResult;
-import org.springframework.stereotype.Controller;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -22,35 +24,19 @@ public class AdminController {
 
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String login(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
-
-        //模拟解密成功
-        if (true) {
-            String uname = CookieUtils.getCookieValue(request, "UNAME", "utf-8");
-            String pwd = CookieUtils.getCookieValue(request, "PWD", "utf-8");
-            if (uname.trim().equals("chryl") && pwd.trim().toUpperCase().equals("40A32D0BBDD411A2EA698C65E237DBBC")) {
-                String token = CookieUtils.getCookieValue(request, "TT_TOKEN", "utf-8");
-                if (token != null) {
-                    return token;
-                }
-            }
-        }
-
-
-        //AES 加密使用
-        model.addAttribute("key", AesCBC.CBC_KEY);
-        model.addAttribute("iv", AesCBC.CBC_IV);
-        return "sys/admin/login";
+    public ResponseResult login(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+        String token = CookieUtils.getCookieValue(request, "TT_TOKEN");
+        if (!StringUtils.isBlank(token))
+            return ResponseResult.build(200, token);
+        return ResponseResult.build(500, token);
     }
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public ResponseResult login(@RequestParam boolean check, @RequestParam String username, @RequestParam String password, HttpServletRequest request, HttpServletResponse response) {
+    @PostMapping("/login")
+    public ResponseResult login(@RequestParam String username,
+                                @RequestParam String password,
+                                @RequestParam(required = false) boolean check, HttpServletRequest request, HttpServletResponse response) {
         try {
-            password = "40A32D0BBDD411A2EA698C65E237DBBC";
-            //对密码解密
-            password = AesCBC.getInstance().decrypt(password, "utf-8", AesCBC.CBC_KEY, AesCBC.CBC_IV);
-
-
+            password = PasswordUtil.EncodeByMD5(password);
             ResponseResult result = userLogin(check, username, password, request, response);
             return result;
         } catch (Exception e) {
@@ -62,16 +48,6 @@ public class AdminController {
 
     public ResponseResult userLogin(boolean check, String username, String password, HttpServletRequest request, HttpServletResponse response) {
         //查询列表
-//        AuthUserExample example = new AuthUserExample();
-//        Criteria criteria = example.createCriteria();
-//        criteria.andUsernameEqualTo(username);
-//        criteria.andStatusEqualTo("T");
-//        List<AuthUser> list = authUserMapper.selectByExample(example);
-        //如果没有此用户名
-//        if (null == list || list.size() == 0) {
-//            return ResponseResult.build(400, "用户不存在");
-//        }
-//        AuthUser user = list.get(0);
         AuthUser user = new AuthUser();
         user.setUsername("chryl");
         //比对密码
