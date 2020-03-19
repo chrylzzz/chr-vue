@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>for</title>
+    <script src="../lib/jquery-1.7.2.js"></script>
+
+</head>
+<body>
+<input type="button" value="批量事件" id="but">
+
+<script>
+    $("#but").on("click", function () {
+        var ps = "?1=1";
+        var ns = "?ids=";
+        var data = [];
+        for (var i = 0; i < 10; i++) {
+            ps += "&ids=" + 5;
+            ns += i + ',';
+            data[i] = i;
+        }
+
+//               不知道啥情况,访问地址加上localhost就404,删除local就可以用
+//           ps += "&ids=" + 5;  这种方法可行
+
+        $.post('/many/delUsers' + ps, function (res) {
+            if (res) {
+
+                debugger
+            }
+
+
+        })
+    });
+
+
+    $(function () {
+
+    })
+</script>
+</body>
+</html>

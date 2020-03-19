@@ -35,11 +35,13 @@
         SELECT * FROM USER
     </select>
 
-    <!-- 批量删除 -->
+    <!-- 批量删除
+    separator:为内部的,
+    -->
     <delete id="deleteUserListByIds" parameterType="list">
         DELETE FROM USER WHERE id in
         <if test="userIds !=null and userIds.size() >0">
-            <foreach collection="userIds" item="userId" open="(" close=")">
+            <foreach collection="userIds" item="userId" open="(" close=")" separator=",">
                 #{userId}
             </foreach>
         </if>
