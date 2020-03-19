@@ -1,7 +1,6 @@
 package com.chryl.po;
 
 import java.util.Date;
-import java.util.List;
 
 public class AuthUser {
     /**

@@ -34,4 +34,14 @@
     <select id="queryUsers" resultMap="BaseResultMap">
         SELECT * FROM USER
     </select>
+
+    <!-- 批量删除 -->
+    <delete id="deleteUserListByIds" parameterType="list">
+        DELETE FROM USER WHERE id in
+        <if test="userIds !=null and userIds.size() >0">
+            <foreach collection="userIds" item="userId" open="(" close=")">
+                #{userId}
+            </foreach>
+        </if>
+    </delete>
 </mapper>

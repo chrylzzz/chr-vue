@@ -19,4 +19,7 @@ public interface UserMapper {
     int deleteByPrimaryKey(@Param("id") String id);
 
     int updateUser(@Param("user") User user);
+
+    int deleteUserListByIds(@Param("userIds") List<String> ids);
+
 }
