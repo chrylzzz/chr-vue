@@ -256,6 +256,7 @@ public class AuthUser {
         this.employeeflag = employeeflag == null ? null : employeeflag.trim();
     }
 
+
 	public String getKpiorgid() {
 		return kpiorgid;
 	}
