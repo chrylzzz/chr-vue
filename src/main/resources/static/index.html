@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <script src="lib/jquery-1.7.2.js"></script>
+    <script src="lib/area_format_js.level3.js"></script>
 </head>
 <body>
 <div id="container">
@@ -30,12 +31,24 @@
                 </div>
             </div>
         </form>
+
+        <div id="area">
+            <div class="test999"></div>
+            <button href="javascript:void(0);" class="btn" id="area-btn">获取省市</button>
+        </div>
+        <div id="set-area">
+            <div class="set-test999"></div>
+        </div>
     </div>
+
 </div>
 
 <script>
 
     $(function () {
+        BuildCitySelect(".test999");
+
+
 
         $.get("user/login", function (data) {
             if (data.status == 200) {
@@ -81,6 +94,22 @@
                 });
 
         });
+
+
+        $("#area-btn").click(function () {
+            let test999 = $(".test999 option:selected");
+            let text = test999.text();
+//            alert("------" + text + "----------");
+            var value9 = "";
+            var text9 = "";
+            for (var i = 0; i < test999.length; i++) {
+                value9 += test999[i].value+":";
+                text9 += test999[i].text+":";
+            }
+            alert("------" + text9 + "=" + value9 + "----------");
+            BuildCitySelect(".set-test999",test999[test999.length-1].value);
+            BuildCitySelect(".set-test999",460204);
+        })
 
 
     });
